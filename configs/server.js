@@ -1,63 +1,46 @@
-import bcrypt from 'bcrypt';
-import Usuario from "../user/usuario.model.js";
-import { generateJWT } from "../helpers/generate-jwt.js";
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import morgan from "morgan";
+import { dbConnection } from "./mongo.js";
+import authRoutes from "../src/auth/auth.routes.js"
+import usuarioroutes from "../src/usuarios/usuario.routes.js"
+//import publicacionesRoutes from "../src/publicaciones/publicaciones.routes.js"
+//import comentariosRoutes from "../src/comentarios/comentarios.routes.js"
 
-export const register = async (req, res, next) => {
-    try {
-        const { body: data, file } = req;
-        const profilePicture = file ? file.filename : null;
-        const salt = bcrypt.genSaltSync(10);
-        data.password = bcrypt.hashSync(data.password, salt);
-        data.profilePicture = profilePicture;
+const middlewares = (app) => {
+    app.use(express.urlencoded({extended: false}))
+    app.use(express.json())
+    app.use(cors())
+    app.use(helmet())
+    app.use(morgan("dev"))
+}
 
-        const user = await Usuario.create(data);
+const routes = async (app) =>{
+    app.use("/gestionOpiniones/v1/auth", authRoutes)
+    app.use("/gestionOpiniones/v1/user", usuarioroutes)
+   // app.use("/gestionOpiniones/v1/publicaciones", publicacionesRoutes)
+    //app.use("/gestionOpiniones/v1/comentarios", comentariosRoutes)
+}
 
-        return res.status(201).json({
-            message: "Usuario ha sido registrado",
-            nombre: user.nombre,
-            correo: user.correo
-        });
-    } catch (err) {
-        return res.status(500).json({
-            success: false,
-            message: "Error al registrar",
-            error: err.message
-        });
+const conectarDB = async () =>{
+    try{
+        await dbConnection()
+    }catch(err){
+        console.log(`Database connection failed: ${err}`)
+        process.exit(1)
     }
-};
+}
 
-export const login = async (req, res) => {
-    const { correo, username, contra } = req.body;
-    try {
-        const user = await Usuario.findOne({
-            $or: [{ correo }, { username }]
-        });
-
-        if (!user) {
-            return res.status(400).json({
-                message: "Credenciales inválidas",
-                error: "No existe el usuario o correo ingresado"
-            });
-        }
-
-        const isPasswordValid = await bcrypt.compare(contra, user.contra);
-        if (!isPasswordValid) {
-            return res.status(400).json({
-                message: "Credenciales inválidas",
-                error: "Contraseña incorrecta"
-            });
-        }
-
-        const token = await generateJWT(user._id);
-
-        return res.status(200).json({
-            message: "Inicio de sesión correctamente",
-            userDetails: { token }
-        });
-    } catch (err) {
-        return res.status (500).json({
-            message: "Inicio de sesión fallido",
-            error: err.message
-        });
+export const initServer = () => {
+    const app = express()
+    try{
+        middlewares(app)
+        conectarDB()
+        routes(app)
+        app.listen(process.env.PORT)
+        console.log(`Server running on port ${process.env.PORT}`)
+    }catch(err){
+        console.log(`Server init failed: ${err}`)
     }
-};
+}

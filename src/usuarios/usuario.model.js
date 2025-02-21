@@ -43,7 +43,7 @@ const usuarioSchema = new Schema({
 
 })
 
-userSchema.methods.toJSON = function(){
+usuarioSchema.methods.toJSON = function(){
     const {_id, password, ...usuario} = this.toObject();
     usuario.uid = _id;
     return usuario;
