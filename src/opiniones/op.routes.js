@@ -5,8 +5,6 @@ import { agregaropinionValidator, actualizaropinionValidator, eliminaropinionVal
 const router = Router()
 
 router.post("/agregarComentario/:pid", agregaropinionValidator, agregarOp)
-
 router.patch("/actualizarComentario/:cid", actualizaropinionValidator, editarOp)
-
 router.delete("/eliminarComentario/:cid", eliminaropinionValidator, eliminarOP)
 export default router;

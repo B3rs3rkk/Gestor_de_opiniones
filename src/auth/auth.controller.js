@@ -7,7 +7,7 @@ export const registrar = async (req, res, next) => {
         const { body: data, file } = req;
         const profilePicture = file ? file.filename : null;
         const salt = bcrypt.genSaltSync(10);
-        data.contra = bcrypt.hashSync(data.contra, salt);
+        data.password = bcrypt.hashSync(data.password, salt);
         data.profilePicture = profilePicture;
 
         const user = await Usuario.create(data);
@@ -26,8 +26,8 @@ export const registrar = async (req, res, next) => {
     }
 };
 
-export const logiar = async (req, res) => {
-    const { correo, username, contra } = req.body;
+export const loggiar = async (req, res) => {
+    const { correo, username, password } = req.body;
     try {
         const user = await Usuario.findOne({
             $or: [{ correo }, { username }]
@@ -40,7 +40,7 @@ export const logiar = async (req, res) => {
             });
         }
 
-        const isPasswordValid = await bcrypt.compare(contra, user.contra);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({
                 message: "Credenciales incorrectas",

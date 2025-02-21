@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import {compare, hash, genSalt} from "bcrypt";
 import Usuarios from "../usuarios/usuario.model.js";
 
 export const actualizarUsuario = async (req, res) => {
@@ -37,27 +37,32 @@ export const actualizarContraseña = async (req, res) => {
     try {
         const { usuario } = req;
         const { oldpassword, newpassword } = req.body;
+        const isOldPasswordValid = await compare(oldpassword, usuario.password );
 
-        const usaurio = await Usuarios.findById(usuario._id);
+        console.log(oldpassword);
 
-        if (!usaurio) {
+        const user = await Usuarios.findById(usuario._id);
+
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario no encontrado"
             });
         }
 
-        const isOldPasswordValid = await bcrypt.compare(oldpassword, usuario.password);
+        console.log(user);
+        
         if (!isOldPasswordValid) {
             return res.status(400).json({
                 success: false,
                 message: "la contraseña anterior no coincide"
             });
         }
-        usuario.password = newpassword;
+        
+        
         await usuario.save();
-        const salt = await bcrypt.genSalt(10);
-        usuario.password = await bcrypt.hash(contraNueva, salt);
+        const salt = await genSalt(10);
+        usuario.password = await hash(newpassword, salt);
         await usuario.save();
 
         return res.status(200).json({

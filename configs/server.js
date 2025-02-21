@@ -17,10 +17,10 @@ const middlewares = (app) => {
 };
 
 const routes = (app) => {
-    app.use("/gestionOpiniones/v1/auth", authRoutes);
-    app.use("/gestionOpiniones/v1/usuarios", usuarioRoutes);
-    app.use("/gestionOpiniones/v1/publicaciones", publicacionesRoutes);
-    app.use("/gestionOpiniones/v1/opiniones", opRoutes);
+    app.use("/gestor/v1/auth", authRoutes);
+    app.use("/gestor/v1/usuarios", usuarioRoutes);
+    app.use("/gestor/v1/publicaciones", publicacionesRoutes);
+    app.use("/gestor/v1/opiniones", opRoutes);
 };
 
 const conectarDB = async () => {

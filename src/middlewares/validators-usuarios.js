@@ -24,7 +24,7 @@ export const loggerValidator = [
 
 export const actualizarUsuarioValidator = [
     validateJWT,
-    hasRoles("CLIENT", "ADMIN"),
+    hasRoles("USER_ROLE"),
     body("username").custom(usernameExists),
     validarCampos,
     handleErrors
@@ -32,7 +32,7 @@ export const actualizarUsuarioValidator = [
 
 export const actualizarContraseñaValidator = [
     validateJWT,
-    hasRoles("CLIENT", "ADMIN"),
+    hasRoles("USER_ROLE"),
     validarCampos,
     handleErrors
 ]
