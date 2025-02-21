@@ -1,4 +1,4 @@
-import Publicaciones from "./publicaciones.model.js";
+import Publicaciones from "./publi.model.js";
 import Usuarios from "../usuarios/usuario.model.js";
 
 export const agregarPubli = async (req, res) => {
