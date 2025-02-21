@@ -6,7 +6,7 @@ import { hasRoles } from "./validar-roles.js";
 import { validarCampos } from "./validar-campos.js";
 import { deleteFileOnError } from "./delete-file-on-error.js";
 
-export const registerValidator = [
+export const registerarValidator = [
     body("nombre").notEmpty().withMessage("El nombre es requerido"),
     body("correo").notEmpty().withMessage("El correo es requerido"),
     body("correo").isEmail().withMessage("No es un correo válido"),
@@ -17,7 +17,7 @@ export const registerValidator = [
     handleErrors
 ]
 
-export const loginValidator = [
+export const loggerValidator = [
     body("correo").optional().isEmail().withMessage("Correo invalido"),
     validarCampos
 ]
@@ -30,7 +30,7 @@ export const actualizarUsuarioValidator = [
     handleErrors
 ]
 
-export const actualizarContraValidator = [
+export const actualizarContraseñaValidator = [
     validateJWT,
     hasRoles("CLIENT", "ADMIN"),
     validarCampos,
