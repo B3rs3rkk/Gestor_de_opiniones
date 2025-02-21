@@ -4,7 +4,7 @@ import {actualizarContraseñaValidator, actualizarUsuarioValidator} from '../mid
 
 const router = Router()
 
-router.put("/actualizar", actualizarUsuarioValidator, actualizarUsuario)
-router.patch("/actualizar-contraseña", actualizarContraseñaValidator, actualizarContraseña)
+router.put("/update", actualizarUsuarioValidator, actualizarUsuario)
+router.patch("/update_password", actualizarContraseñaValidator, actualizarContraseña)
 
 export default router;
