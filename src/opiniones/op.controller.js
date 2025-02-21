@@ -1,5 +1,5 @@
-import Comentarios from "./op.model.js"
-import Publicaciones from "../publicaciones/publi.model.js"
+import opiniones from "./op.model.js"
+import publicaciones from "../publicaciones/publi.model.js"
 
 export const agregarOp = async (req, res) =>{
     try{
@@ -8,7 +8,7 @@ export const agregarOp = async (req, res) =>{
         const {texto} = req.body;
 
         const publi = await publi.findById(pid);
-        if (!publicacion) {
+        if (!publi) {
             return res.status(404).json({
                 success: false,
                 message: "La publicación no existe"
@@ -20,11 +20,11 @@ export const agregarOp = async (req, res) =>{
         });
         const opinonGuardada = await newopinion.save();
 
-        publi.comentarios.push(opinonGuardada._id);
+        publi.opinion.push(opinonGuardada._id);
         await publi.save();
 
         await publi.populate({
-            path: "comentarios", 
+            path: "opiniones", 
             select: "texto -_id", 
             populate: {
                 path: "usuario", 
@@ -34,20 +34,20 @@ export const agregarOp = async (req, res) =>{
 
         return res.status(200).json({
             success: true,
-            message: "Comentario agregado correctamente",
+            message: " la opinion agregada correctamente",
             
-            publicacionConComentarios: {
-                usuario: publicacion.usuario, 
-                titulo: publicacion.titulo,
-                texto: publicacion.texto,
-                comentarios: publicacion.comentarios 
+            publicacionConOpinion: {
+                usuario: publi.usuario, 
+                titulo: publi.titulo,
+                texto: publi.texto,
+                opinion: publi.opinion 
             }
 
         });
     }catch(err){
         return res.status(500).json({
             success: false,
-            message: "Error al agregar el comentario",
+            message: "Error al agregar la opinion",
             error: err.message
         });
     }
@@ -59,38 +59,38 @@ export const editarOp = async (req, res) =>{
         const {cid} = req.params;
         const {texto} = req.body;
 
-        const comentario = await Comentarios.findById(cid);
-        if (!comentario) {
+        const  opinion = await opinion.findById(cid);
+        if (!opinion) {
             return res.status(404).json({
                 success: false,
-                message: "El comentario no existe"
+                message: "la opinion es inexistente"
             });
         }
         console.log(opinion)
         if (!opinion.usuario.equals(usuario._id)) {
             return res.status(400).json({
                 success: false,
-                message: "No tienes permiso para editar este comentario"
+                message: "No tienes permiso para editar esta opinion"
             });
         }
 
-        comentario.texto = texto;
-        const nuevoComentario = await comentario.save();
+        opinion.texto = texto;
+        const newopinion = await opinion.save();
 
 
         const respuesta = {
-            texto: nuevoComentario.texto,
-            usuario: nuevoComentario.usuario.nombre
+            texto: newopinion.texto,
+            usuario: newopinion.usuario.nombre
         };
         return res.status(200).json({
             success: true,
-            message: "Comentario actualizado correctamente",
+            message: "opinion actualizada",
             respuesta
         });
     }catch(err){
         return res.status(500).json({
             success: false,
-            message: "Error al agregar el comentario",
+            message: "Error al agregar la opinion",
             error: err.message
         });
     }
@@ -114,25 +114,25 @@ export const eliminarOP = async (req, res) =>{
                 message: "No tienes permiso para eliminar este comentario"
             });
         }
-        const publi = await Publicaciones.findOne({ opinion: cid });
+        const publi = await publi.findOne({ opinion: cid });
         if (publi) {
             publi.opinion = publi.opinion.filter(
                 opinionId => opinionId.toString() !== cid.toString()
             );
-            await publicacion.save(); 
+            await publi.save(); 
         }
 
         await opinion.findByIdAndDelete(cid);
 
         return res.status(200).json({
             success: true,
-            message: "Comentario eliminado correctamente"
+            message: "opinion eliminada"
         });
 
     }catch(err){
         return res.status(500).json({
             success: false,
-            message: "Error al eliminar el comentario",
+            message: "Error al eliminar la opinion",
             error: err.message
         });
     }

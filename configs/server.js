@@ -6,7 +6,7 @@ import { dbConnection } from "./mongo.js";
 import authRoutes from "../src/auth/auth.routes.js";
 import usuarioRoutes from "../src/usuarios/usuario.routes.js";
 import publicacionesRoutes from "../src/publicaciones/publi.routes.js";
-// import comentariosRoutes from "../src/comentarios/comentarios.routes.js";
+import opRoutes from "../src/opiniones/op.routes.js";
 
 const middlewares = (app) => {
     app.use(express.urlencoded({ extended: false }));
@@ -18,9 +18,9 @@ const middlewares = (app) => {
 
 const routes = (app) => {
     app.use("/gestionOpiniones/v1/auth", authRoutes);
-    app.use("/gestionOpiniones/v1/user", usuarioRoutes);
+    app.use("/gestionOpiniones/v1/usuarios", usuarioRoutes);
     app.use("/gestionOpiniones/v1/publicaciones", publicacionesRoutes);
-    // app.use("/gestionOpiniones/v1/comentarios", comentariosRoutes);
+    app.use("/gestionOpiniones/v1/opiniones", opRoutes);
 };
 
 const conectarDB = async () => {
