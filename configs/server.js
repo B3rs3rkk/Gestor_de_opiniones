@@ -3,44 +3,45 @@ import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
 import { dbConnection } from "./mongo.js";
-import authRoutes from "../src/auth/auth.routes.js"
-import usuarioroutes from "../src/usuarios/usuario.routes.js"
-//import publicacionesRoutes from "../src/publicaciones/publicaciones.routes.js"
-//import comentariosRoutes from "../src/comentarios/comentarios.routes.js"
+import authRoutes from "../src/auth/auth.routes.js";
+import usuarioRoutes from "../src/usuarios/usuario.routes.js";
+import publicacionesRoutes from "../src/publicaciones/publi.routes.js";
+// import comentariosRoutes from "../src/comentarios/comentarios.routes.js";
 
 const middlewares = (app) => {
-    app.use(express.urlencoded({extended: false}))
-    app.use(express.json())
-    app.use(cors())
-    app.use(helmet())
-    app.use(morgan("dev"))
-}
+    app.use(express.urlencoded({ extended: false }));
+    app.use(express.json());
+    app.use(cors());
+    app.use(helmet());
+    app.use(morgan("dev"));
+};
 
-const routes = async (app) =>{
-    app.use("/gestionOpiniones/v1/auth", authRoutes)
-    app.use("/gestionOpiniones/v1/user", usuarioroutes)
-   // app.use("/gestionOpiniones/v1/publicaciones", publicacionesRoutes)
-    //app.use("/gestionOpiniones/v1/comentarios", comentariosRoutes)
-}
+const routes = (app) => {
+    app.use("/gestionOpiniones/v1/auth", authRoutes);
+    app.use("/gestionOpiniones/v1/user", usuarioRoutes);
+    app.use("/gestionOpiniones/v1/publicaciones", publicacionesRoutes);
+    // app.use("/gestionOpiniones/v1/comentarios", comentariosRoutes);
+};
 
-const conectarDB = async () =>{
-    try{
-        await dbConnection()
-    }catch(err){
-        console.log(`Database connection failed: ${err}`)
-        process.exit(1)
+const conectarDB = async () => {
+    try {
+        await dbConnection();
+    } catch (err) {
+        console.log(`Database connection failed: ${err}`);
+        process.exit(1);
     }
-}
+};
 
 export const initServer = () => {
-    const app = express()
-    try{
-        middlewares(app)
-        conectarDB()
-        routes(app)
-        app.listen(process.env.PORT)
-        console.log(`Server running on port ${process.env.PORT}`)
-    }catch(err){
-        console.log(`Server init failed: ${err}`)
+    const app = express();
+    try {
+        middlewares(app);
+        conectarDB();
+        routes(app);
+        app.listen(process.env.PORT, () => {
+            console.log(`Server running on port ${process.env.PORT}`);
+        });
+    } catch (err) {
+        console.log(`Server init failed: ${err}`);
     }
-}
+};

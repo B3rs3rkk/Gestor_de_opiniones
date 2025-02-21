@@ -55,7 +55,7 @@ export const logiar = async (req, res) => {
             userDetails: { token }
         });
     } catch (err) {
-        return res.status (500).json({
+        return res.status(500).json({
             message: "el inicio de sesión ah fallado",
             error: err.message
         });
