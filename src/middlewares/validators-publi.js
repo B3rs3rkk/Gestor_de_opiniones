@@ -8,14 +8,14 @@ export const agregarPubliValidator =[
     validateJWT,
     body("titulo").notEmpty().withMessage("El titulo es requerido"),
     body("categoria").isMongoId().withMessage("No es un ID válido de MongoDB"),
-    body("texto").notEmpty().withMessage("El texto es requerido"),
+    body("descripcion").notEmpty().withMessage("la descripcion es requerida"),
     validarCampos,
     handleErrors
 ]
 
 export const actualizar_Eliminar_PububliValidator=[
     validateJWT,
-    param("pid").isMongoId().withMessage("No es un ID válido de MongoDB"),
+    param("idPublicacion").isMongoId().withMessage("No es un ID válido de MongoDB"),
     validarCampos,
     handleErrors
 ]

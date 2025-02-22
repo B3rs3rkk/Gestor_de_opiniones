@@ -1,9 +1,9 @@
 import { config } from "dotenv";
-import { initServer } from "./configs/server.js"
-//import { categoria } from "./configs/crearCategoriaDefault.js";
-//import {administrador} from "./configs/crearAdmin.js"
+import { initServer } from "./configs/server.js";
+import {crearadministrador} from "./configs/administrador.js"
+import { categoria } from "./configs/categoriaPredeterminada.js";
 
 config()
 initServer()
-//administrador()
-//categoria()
+crearadministrador()
+categoria()

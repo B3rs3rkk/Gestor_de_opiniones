@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { agregarOp, editarOp, eliminarOP } from "./op.controller.js";
+import { añadirOpinion, modificarOpinion, borrarOpinion } from "./op.controller.js";
 import { agregaropinionValidator, actualizaropinionValidator, eliminaropinionValidator } from "../middlewares/validators-op.js";
 
 const router = Router()
 
-router.post("/agregarComentario/:pid", agregaropinionValidator, agregarOp)
-router.patch("/actualizarComentario/:cid", actualizaropinionValidator, editarOp)
-router.delete("/eliminarComentario/:cid", eliminaropinionValidator, eliminarOP)
+router.post("/agregarOpinion", agregaropinionValidator, añadirOpinion)
+router.patch("/actualizarOpinion/:idOpinion", actualizaropinionValidator, modificarOpinion)
+router.delete("/eliminarOpinion/:idOpinion", eliminaropinionValidator, borrarOpinion)
 export default router;

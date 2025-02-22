@@ -1,106 +1,109 @@
 import Publicaciones from "./publi.model.js";
 import Usuarios from "../usuarios/usuario.model.js";
 
-export const agregarPubli = async (req, res) => {
+export const crearPublicacion = async (req, res) => {
     try {
-        const { usuario, body } = req;
-        const { titulo, categoria, texto } = body;
+        const { usuario } = req;
+        const { titulo, categoria, contenido, descripcion } = req.body;
 
-        const newPublicacion = new Publicaciones({
+        const nuevaPublicacion = new Publicaciones({
             titulo,
             categoria,
-            texto,
+            descripcion,
+            texto: contenido,
             usuario: usuario._id
         });
 
-        const guardar = await newPublicacion.save();
+        const resultado = await nuevaPublicacion.save();
 
         return res.status(201).json({
-            success: true,
-            message: "Publicación creada",
-            publicacion: guardar
+            exito: true,
+            mensaje: "Publicación añadida exitosamente",
+            datos: resultado
         });
-    } catch (err) {
+    } catch (error) {
         return res.status(500).json({
-            success: false,
-            message: "Error al crear",
-            error: err.message
+            exito: false,
+            mensaje: "Error al registrar la publicación",
+            detalle: error.message
         });
     }
 };
 
-export const actualizarPubli = async (req, res) => {
+export const modificarPublicacion = async (req, res) => {
     try {
         const { usuario } = req;
-        const { pid } = req.params;
-        const data = req.body;
+        const { idPublicacion } = req.params;
+        const nuevaData = req.body;
 
-        const publi = await publi.findById(pid);
-
-        if (!publi) {
+        const publicacionExistente = await Publicaciones.findById(idPublicacion);
+        
+        if (!publicacionExistente) {
             return res.status(404).json({
-                success: false,
-                message: "La publicación no existe"
+                exito: false,
+                mensaje: "No se encontró la publicación"
+
             });
+
         }
-        if (!publi.usuario.equals(usuario._id)) {
+        if (!publicacionExistente.usuario.equals(usuario._id)) {
             return res.status(403).json({
-                success: false,
-                message: "No tienes permiso para actualizar esta publicación"
+                exito: false,
+                mensaje: "Acceso denegado para modificar esta publicación"
             });
         }
 
-        const publiActualizada = await publi.findByIdAndUpdate(
-            pid,
-            { $set: data },
+        const publicacionActualizada = await Publicaciones.findByIdAndUpdate(
+            idPublicacion,
+            { $set: nuevaData },
             { new: true }
         );
 
         return res.status(200).json({
-            success: true,
-            message: "Publicación actualizada correctamente",
-            publicacion: publiActualizada
+            exito: true,
+            mensaje: "Publicación modificada con éxito",
+            datos: publicacionActualizada
         });
-    } catch (err) {
+    } catch (error) {
         return res.status(500).json({
-            success: false,
-            message: "Error al actualizar la publicación",
-            error: err.message
+            exito: false,
+            mensaje: "Error al actualizar la publicación",
+            detalle: error.message
         });
     }
 };
 
-export const eliminarPubli = async (req, res) => {
+export const borrarPublicacion = async (req, res) => {
     try {
         const { usuario } = req;
-        const { pid } = req.params;
+        const { idPublicacion } = req.params;
 
-        const publi = await publi.findById(pid);
+        const publicacionExistente = await Publicaciones.findById(idPublicacion);
 
-        if (!publi) {
+        if (!publicacionExistente) {
             return res.status(404).json({
-                success: false,
-                message: "La publicación no existe"
+                exito: false,
+                mensaje: "No se encontró la publicación"
             });
         }
-        if (!publi.usuario.equals(usuario._id)) {
+        if (!publicacionExistente.usuario.equals(usuario._id)) {
             return res.status(403).json({
-                success: false,
-                message: "No tienes permiso para eliminar esta publicación"
+                exito: false,
+                mensaje: "Acceso denegado para eliminar esta publicación"
             });
         }
 
-        await publi.findByIdAndDelete(pid);
+        await Publicaciones.findByIdAndDelete(idPublicacion);
 
         return res.status(200).json({
-            success: true,
-            message: "Publicación eliminada correctamente"
+            exito: true,
+            mensaje: "Publicación eliminada exitosamente"
         });
-    } catch (err) {
+    } catch (error) {
         return res.status(500).json({
-            success: false,
-            message: "Error al eliminar la publicación",
-            error: err.message
+            exito: false,
+            mensaje: "Error al eliminar la publicación",
+            detalle: error.message
         });
     }
 };

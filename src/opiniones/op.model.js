@@ -10,6 +10,11 @@ const opinionesSchema = Schema({
         type: Schema.ObjectId,
         ref: 'usuario',
         required: true
+    },
+    idPublicacion: { // Cambiado a idPublicacion
+        type: Schema.ObjectId,
+        ref: 'publicacion',
+        required: true
     }
 })
 

@@ -7,6 +7,7 @@ const usuarioSchema = new Schema({
         maxLenght:[40, 'El nombre no puede tener más de 40 caracteres']
     },
 
+
     username:{
         type:String,
         required:[true, 'El username es obligatorio'],
@@ -28,7 +29,7 @@ const usuarioSchema = new Schema({
     rol:{
         type:String,
         required:true,
-        enum:['USER_ROLE']
+        enum:['USER_ROLE'],
     },
 
     profilePicture:{

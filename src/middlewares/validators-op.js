@@ -5,23 +5,22 @@ import { handleErrors } from "./handleErrors.js";
 
 export const agregaropinionValidator =[
     validateJWT,
-        body("texto").notEmpty().withMessage("El texto es requerido"),
-        param("pid").isMongoId().withMessage("No es un ID válido de MongoDB"),
+        body("descipcion").notEmpty().withMessage("la descipcion es requerida"),
         validarCampos,
         handleErrors
 ]
 
 export const actualizaropinionValidator =[
     validateJWT,
-    body("texto").notEmpty().withMessage("El texto es requerido"),
-    param("cid").isMongoId().withMessage("No es un ID válido de MongoDB"),
+    body("descipcion").notEmpty().withMessage("El descipcion es requerido"),
+    param("idOpinion").isMongoId().withMessage("No es un ID válido de MongoDB"),
     validarCampos,
     handleErrors
 ]
 
 export const eliminaropinionValidator =[
     validateJWT,
-    param("cid").isMongoId().withMessage("No es un ID válido de MongoDB"),
+    param("idOpinion").isMongoId().withMessage("No es un ID válido de MongoDB"),
     validarCampos,
     handleErrors
 ]

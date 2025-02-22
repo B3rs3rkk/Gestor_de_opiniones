@@ -1,139 +1,142 @@
-import opiniones from "./op.model.js"
-import publicaciones from "../publicaciones/publi.model.js"
+import Opinion from "../opiniones/op.model.js";
+import Publicacion from "../publicaciones/publi.model.js";
 
-export const agregarOp = async (req, res) =>{
-    try{
-        const {usuario} = req;
-        const {pid} = req.params;
-        const {texto} = req.body;
+export const añadirOpinion = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const { idPublicacion, descripcion } = req.body;  // Corregí el typo de "descipcion" a "descripcion"
 
-        const publi = await publi.findById(pid);
-        if (!publi) {
+        const publicacion = await Publicacion.findById(idPublicacion);
+        if (!publicacion) {
             return res.status(404).json({
-                success: false,
-                message: "La publicación no existe"
+                exito: false,
+                mensaje: "La publicación no fue encontrada"
             });
-        };
-        const newopinion = new opiniones({
-            texto,
-            usuario: usuario._id
+        }
+
+        
+        const nuevaOpinion = new Opinion({
+            descripcion,  
+            usuario: usuario._id,
+            idPublicacion
         });
-        const opinonGuardada = await newopinion.save();
 
-        publi.opinion.push(opinonGuardada._id);
-        await publi.save();
+        
+        const opinionGuardada = await nuevaOpinion.save();
 
-        await publi.populate({
-            path: "opiniones", 
-            select: "texto -_id", 
+        
+        publicacion.opiniones.push(opinionGuardada._id);
+        await publicacion.save();
+
+        
+        await publicacion.populate({
+            path: "opiniones",
+            select: "descripcion -_id",  
             populate: {
-                path: "usuario", 
-                select: "username -_id"
+                path: "usuario",
+                select: "nombreUsuario -_id"
             }
-        })
-
-        return res.status(200).json({
-            success: true,
-            message: " la opinion agregada correctamente",
-            
-            publicacionConOpinion: {
-                usuario: publi.usuario, 
-                titulo: publi.titulo,
-                texto: publi.texto,
-                opinion: publi.opinion 
-            }
-
         });
-    }catch(err){
+
+        
+        return res.status(200).json({
+            exito: true,
+            mensaje: "Opinión añadida correctamente",
+            postConReseñas: {
+                autor: publicacion.usuario,
+                titulo: publicacion.titulo,
+                descripcion: publicacion.descripcion,  
+                reseñas: publicacion.opiniones
+            }
+        });
+    } catch (err) {
         return res.status(500).json({
-            success: false,
-            message: "Error al agregar la opinion",
+            exito: false,
+            mensaje: "Error al añadir la opinión",
             error: err.message
         });
     }
-}
+};
 
-export const editarOp = async (req, res) =>{
-    try{
-        const {usuario} = req;
-        const {cid} = req.params;
-        const {texto} = req.body;
 
-        const  opinion = await opinion.findById(cid);
+export const modificarOpinion = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const { idOpinion } = req.params;
+        const { contenido } = req.body;
+
+        const opinion = await Opinion.findById(idOpinion);
         if (!opinion) {
             return res.status(404).json({
-                success: false,
-                message: "la opinion es inexistente"
+                exito: false,
+                mensaje: "La opinion no existe"
             });
         }
-        console.log(opinion)
-        if (!opinion.usuario.equals(usuario._id)) {
-            return res.status(400).json({
-                success: false,
-                message: "No tienes permiso para editar esta opinion"
-            });
-        }
-
-        opinion.texto = texto;
-        const newopinion = await opinion.save();
-
-
-        const respuesta = {
-            texto: newopinion.texto,
-            usuario: newopinion.usuario.nombre
-        };
-        return res.status(200).json({
-            success: true,
-            message: "opinion actualizada",
-            respuesta
-        });
-    }catch(err){
-        return res.status(500).json({
-            success: false,
-            message: "Error al agregar la opinion",
-            error: err.message
-        });
-    }
-}
-
-export const eliminarOP = async (req, res) =>{
-    try{
-        const {usuario} = req;
-        const {cid} = req.params;
-
-        const opinion = await opinion.findById(cid);
-        if (!opinion) {
-            return res.status(404).json({
-                success: false,
-                message: "la opinion no existe"
-            });
-        }
-        if (!opinion.usuario.equals(usuario._id)) {
+        if (!reseña.usuario.equals(usuario._id)) {
             return res.status(403).json({
-                success: false,
-                message: "No tienes permiso para eliminar este comentario"
+                exito: false,
+                mensaje: "No tienes autorización para modificar esta opinion"
             });
         }
-        const publi = await publi.findOne({ opinion: cid });
-        if (publi) {
-            publi.opinion = publi.opinion.filter(
-                opinionId => opinionId.toString() !== cid.toString()
-            );
-            await publi.save(); 
-        }
 
-        await opinion.findByIdAndDelete(cid);
+        opinion.contenido = contenido;
+        const opinionActualizada = await opinion.save();
 
         return res.status(200).json({
-            success: true,
-            message: "opinion eliminada"
+            exito: true,
+            mensaje: "la opinion fue editada exitosamente",
+            datos: {
+                contenido: opinionActualizada.contenido,
+                autor: opinionActualizada.usuario.nombre
+            }
         });
-
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({
-            success: false,
-            message: "Error al eliminar la opinion",
+            exito: false,
+            mensaje: "Error al modificar la opinion",
             error: err.message
         });
     }
-}
+};
+
+export const borrarOpinion = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const { idOpinion } = req.params;
+
+        const opinion = await Opinion.findById(idOpinion);
+        if (!opinion) {
+            return res.status(404).json({
+                exito: false,
+                mensaje: "No se encontró la opinion"
+            });
+        }
+        if (!reseña.usuario.equals(usuario._id)) {
+            return res.status(403).json({
+                exito: false,
+                mensaje: "No tienes permiso para eliminar esta opinion"
+            });
+        }
+
+        const opinionAsociada = await Opinion.findOne({ opinion: idOpinion });
+        if (opinionAsociada) {
+            opinionAsociada.opinion = postAsociado.reseñas.filter(
+                (reseñaId) => reseñaId.toString() !== idOpinion.toString()
+            );
+            await opinionAsociada.save();
+        }
+
+        await Reseñas.findByIdAndDelete(idOpinion);
+
+        return res.status(200).json({
+            exito: true,
+            mensaje: "opinion eliminada satisfactoriamente"
+        });
+    } catch (err) {
+        return res.status(500).json({
+            exito: false,
+            mensaje: "Error al eliminar la opinion",
+            error: err.message
+        });
+    }
+};
