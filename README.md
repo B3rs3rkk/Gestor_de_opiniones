@@ -1,4 +1,4 @@
-API de Gestión de Opiniones
+## API de Gestión de Opiniones
 
 Descripción
 
@@ -11,10 +11,10 @@ Por defecto, la API cuenta con un usuario administrador que posee privilegios pa
 Datos del administrador:
 
 {
-    "nombre": "Admin",
-    "apellido": "PorDefecto",
-    "username": "admin",
-    "correo": "admin@example.com",
-    "password": "123",
-    "rol": "ADMIN"
+    #"nombre": "Admin",
+    #"apellido": "PorDefecto",
+    #"username": "admin",
+    #"correo": "admin@example.com",
+    #"password": "123",
+    #"rol": "ADMIN"
 }
