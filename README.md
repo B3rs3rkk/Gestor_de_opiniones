@@ -10,11 +10,14 @@ Por defecto, la API cuenta con un usuario administrador que posee privilegios pa
 
 Datos del administrador:
 
-{
-    #"nombre": "Admin",
-    #"apellido": "PorDefecto",
-    #"username": "admin",
-    #"correo": "admin@example.com",
-    #"password": "123",
-    #"rol": "ADMIN"
-}
+Nombre: Admin
+
+Apellido: PorDefecto
+
+Username: admin
+
+Correo: admin@example.com
+
+Password: 123
+
+Rol: ADMIN
