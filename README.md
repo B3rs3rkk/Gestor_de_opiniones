@@ -10,6 +10,8 @@ Por defecto, la API cuenta con un usuario administrador que posee privilegios pa
 
 Datos del administrador:
 
+----------------------------------------------------------------------------
+
 Nombre: Admin
 
 Apellido: PorDefecto
