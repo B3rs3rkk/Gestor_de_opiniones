@@ -8,9 +8,9 @@ Credenciales del Administrador
 
 Por defecto, la API cuenta con un usuario administrador que posee privilegios para gestionar la aplicación.
 
-Datos del administrador:
-
 ----------------------------------------------------------------------------
+Datos del administrador:
+-------------------------
 
 Nombre: Admin
 
